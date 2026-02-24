@@ -1,0 +1,257 @@
+:root {
+  --bone: #fff3e7;
+  --dark-purple: #24072b;
+  --yellow: #fdb515;
+  --orange: #c95027;
+  --warm-charcoal: #382f2d;
+  --white: #ffffff;
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --focus-ring: 4px solid var(--yellow);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Figtree", Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--warm-charcoal);
+  background: linear-gradient(180deg, #fff3e7 0%, #fffaF5 100%);
+}
+
+.site-header {
+  background: var(--dark-purple);
+  color: var(--white);
+  padding: 1.25rem;
+}
+
+.header-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#brand-logo {
+  width: clamp(120px, 25vw, 170px);
+  height: auto;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--yellow);
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 2.1rem);
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.main-content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.1rem;
+}
+
+.quiz-card {
+  background: var(--white);
+  border: 2px solid rgba(36, 7, 43, 0.15);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.1rem, 3vw, 2rem);
+  box-shadow: 0 8px 20px rgba(56, 47, 45, 0.08);
+}
+
+.progress {
+  margin: 0;
+  font-weight: 700;
+  color: var(--dark-purple);
+}
+
+.question-title,
+.results-title,
+.welcome-title {
+  margin: 0.75rem 0 1rem;
+  font-size: clamp(1.75rem, 5vw, 2.1rem);
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--dark-purple);
+}
+
+legend.question-title {
+  padding: 0;
+}
+
+.intro,
+.band-message,
+.small-note,
+.score-line {
+  margin: 0 0 1rem;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.options {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.option-card {
+  border: 2px solid rgba(56, 47, 45, 0.25);
+  border-radius: var(--radius-md);
+  padding: 0.9rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  cursor: pointer;
+}
+
+.option-card:hover {
+  border-color: var(--orange);
+}
+
+.option-card:has(input:checked) {
+  border-color: var(--dark-purple);
+  background: rgba(253, 181, 21, 0.15);
+}
+
+.option-card input[type="radio"] {
+  width: 1.45rem;
+  height: 1.45rem;
+  margin-top: 0.1rem;
+  accent-color: var(--dark-purple);
+  flex-shrink: 0;
+}
+
+.option-text {
+  font-size: 1.06rem;
+  font-weight: 600;
+}
+
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.2rem;
+  flex-wrap: wrap;
+}
+
+button,
+.cta-link {
+  min-height: 54px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  padding: 0.7rem 1.2rem;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-primary,
+.cta-link {
+  background: var(--dark-purple);
+  color: var(--white);
+}
+
+.button-primary:hover,
+.cta-link:hover {
+  background: #35113f;
+}
+
+.button-primary:active,
+.cta-link:active {
+  background: #18041e;
+}
+
+.button-secondary {
+  background: var(--white);
+  color: var(--dark-purple);
+  border-color: var(--dark-purple);
+}
+
+.button-secondary:hover {
+  background: rgba(36, 7, 43, 0.08);
+}
+
+.button-secondary:active {
+  background: rgba(36, 7, 43, 0.14);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+.cta-link:focus-visible,
+.option-card:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+ul {
+  margin-top: 0.5rem;
+  padding-left: 1.2rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+.info-note {
+  border-left: 6px solid var(--orange);
+  background: rgba(249, 233, 220, 0.7);
+  padding: 0.9rem;
+  border-radius: 8px;
+  margin: 1.1rem 0;
+}
+
+.results-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
+
+@media (max-width: 640px) {
+  .header-inner {
+    align-items: flex-start;
+  }
+
+  .header-copy {
+    min-width: 0;
+  }
+
+  .button-row,
+  .results-actions {
+    flex-direction: column;
+  }
+
+  button,
+  .cta-link {
+    width: 100%;
+  }
+}
