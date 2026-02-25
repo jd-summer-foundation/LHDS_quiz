@@ -154,6 +154,16 @@ fieldset {
   flex-wrap: wrap;
 }
 
+.button-icon {
+  font-weight: 800;
+  margin-right: 0.35rem;
+}
+
+#next-btn .button-icon {
+  margin-right: 0;
+  margin-left: 0.35rem;
+}
+
 button,
 .cta-link {
   min-height: 54px;
@@ -227,6 +237,44 @@ li {
   padding: 0.9rem;
   border-radius: 8px;
   margin: 1.1rem 0;
+}
+
+.area-results {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.area-result {
+  border: 2px solid rgba(56, 47, 45, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 0.9rem;
+}
+
+.area-result-title,
+.area-result-answer {
+  margin: 0;
+}
+
+.area-result-answer {
+  margin-top: 0.35rem;
+}
+
+.score-green {
+  border-color: #2e7d32;
+  background: #e9f7eb;
+}
+
+.score-yellow {
+  border-color: #b28704;
+  background: #fff8df;
+}
+
+.score-red {
+  border-color: #c62828;
+  background: #fdeaea;
 }
 
 .results-actions {

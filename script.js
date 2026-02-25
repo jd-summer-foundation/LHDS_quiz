@@ -4,30 +4,48 @@ const LOGO_PATH = "/assets/summer-foundation-logo.svg";
 const QUESTIONS = [
   {
     id: "step_free_entry",
+    areaLabel: "Step-free entry",
     prompt: "Can you go from the footpath into your home without having to navigate any steps?",
     options: [
       { label: "Yes - it's step-free.", points: 2 },
       { label: "There's one small step.", points: 1 },
       { label: "There are multiple steps.", points: 0 },
     ],
+    feedbackByPoints: {
+      2: "Level entry makes it easier for all to enter or exit a home.",
+      1: "Fewer steps can make it easier and safer when entering or exiting.",
+      0: "Multiple steps at the entrance can make it harder as balance or mobility worsens.",
+    },
   },
   {
     id: "shower",
+    areaLabel: "Level-entry shower",
     prompt: "Do you have a shower with level entry?",
     options: [
       { label: "Yes - it's level entry (no step or lip).", points: 2 },
       { label: "There's a small lip, edge, or step-down.", points: 1 },
-      { label: "It's a shower over a bath.", points: 0 },
+      { label: "Climbing over a bath edge to shower creates a fall risk.", points: 0 },
     ],
+    feedbackByPoints: {
+      2: "Level entry for a shower is ideal to create a safe environment.",
+      1: "While better than an over-bath shower, level entry is even better to support ageing in place.",
+      0: "Climbing over a bath edge to shower creates a fall risk.",
+    },
   },
   {
     id: "doors_corridors",
+    areaLabel: "Doors and corridors",
     prompt: "Are your doors and corridors wide enough for you?",
     options: [
       { label: "Yes - it's easy to move through my home, even if using a walker.", points: 2 },
       { label: "Some doors or corridors are tricky.", points: 1 },
       { label: "Most or all doors or corridors are tricky.", points: 0 },
     ],
+    feedbackByPoints: {
+      2: "Wider doors and corridors help make a home suitable for all ages and stages of life.",
+      1: "The easier it is to move within your home, the more that home supports ageing in place.",
+      0: "Narrow doors and corridors can make it harder to get around safely within a home.",
+    },
   },
 ];
 
@@ -97,12 +115,30 @@ function getResultBand(score) {
   return RESULT_BANDS.find((band) => score >= band.min && score <= band.max);
 }
 
+function resetQuiz(screen = "welcome") {
+  appState.screen = screen;
+  appState.questionIndex = 0;
+  appState.answers = Array(QUESTIONS.length).fill(null);
+}
+
+function getStatusForPoints(points) {
+  if (points === 2) {
+    return { emoji: "🟢", label: "Strong", className: "score-green" };
+  }
+
+  if (points === 1) {
+    return { emoji: "🟡", label: "Mixed", className: "score-yellow" };
+  }
+
+  return { emoji: "🔴", label: "May be challenging", className: "score-red" };
+}
+
 function renderWelcome() {
   quizCard.innerHTML = `
     <h2 class="welcome-title">Let's take a quick look at how your home supports you as you get older.</h2>
     <p class="intro">This isn't a test - just a few simple questions to help you think about what makes a home easier to live in over time.</p>
     <div class="button-row">
-      <button id="start-btn" class="button-primary" type="button">Start</button>
+      <button id="start-btn" class="button-primary" type="button">Start <span class="button-icon" aria-hidden="true">&rarr;</span></button>
     </div>
   `;
 
@@ -143,9 +179,14 @@ function renderQuestion() {
         <div class="options">${optionsMarkup}</div>
       </fieldset>
       <div class="button-row">
-        ${index > 0 ? '<button id="back-btn" class="button-secondary" type="button">Back</button>' : ""}
+        ${
+          index > 0
+            ? '<button id="back-btn" class="button-secondary" type="button"><span class="button-icon" aria-hidden="true">&larr;</span> Back</button>'
+            : ""
+        }
+        <button id="start-over-btn" class="button-secondary" type="button"><span class="button-icon" aria-hidden="true">&#x21bb;</span> Start over</button>
         <button id="next-btn" class="button-primary" type="submit" ${selected === null ? "disabled" : ""}>
-          ${index === QUESTIONS.length - 1 ? "See Results" : "Next"}
+          ${index === QUESTIONS.length - 1 ? 'See Results <span class="button-icon" aria-hidden="true">&rarr;</span>' : 'Next <span class="button-icon" aria-hidden="true">&rarr;</span>'}
         </button>
       </div>
     </form>
@@ -161,6 +202,11 @@ function renderQuestion() {
 
   document.getElementById("back-btn")?.addEventListener("click", () => {
     appState.questionIndex -= 1;
+    render();
+  });
+
+  document.getElementById("start-over-btn")?.addEventListener("click", () => {
+    resetQuiz("welcome");
     render();
   });
 
@@ -185,6 +231,22 @@ function renderQuestion() {
 function renderResults() {
   const score = getScore();
   const band = getResultBand(score);
+  const areaResultsMarkup = QUESTIONS.map((question, questionIndex) => {
+    const answerIndex = appState.answers[questionIndex];
+    const points = answerIndex === null ? 0 : question.options[answerIndex].points;
+    const status = getStatusForPoints(points);
+    const feedbackText =
+      answerIndex === null
+        ? "No answer selected."
+        : (question.feedbackByPoints?.[points] ?? question.options[answerIndex].label);
+
+    return `
+      <li class="area-result ${status.className}">
+        <p class="area-result-title"><strong>${escapeHtml(question.areaLabel)}:</strong> ${status.emoji} ${escapeHtml(status.label)}</p>
+        <p class="area-result-answer">${escapeHtml(feedbackText)}</p>
+      </li>
+    `;
+  }).join("");
 
   if (!band) {
     quizCard.innerHTML = "<p>There was a problem showing your result. Please try again.</p>";
@@ -193,7 +255,9 @@ function renderResults() {
 
   quizCard.innerHTML = `
     <h2 class="results-title">${escapeHtml(band.title)}</h2>
-    <p class="score-line"><strong>Your score: ${score}/6</strong></p>
+    <p class="score-line"><strong>Area-by-area results</strong></p>
+    <ul class="area-results">${areaResultsMarkup}</ul>
+    <p class="score-line"><strong>Total score: ${score}/6</strong></p>
     <ul class="band-message">
       ${band.messages.map((message) => `<li>${escapeHtml(message)}</li>`).join("")}
     </ul>
@@ -213,14 +277,12 @@ function renderResults() {
     <h3>Want updates on Building Better Homes?</h3>
     <div class="results-actions">
       <a class="cta-link" href="${SIGNUP_URL}" target="_blank" rel="noopener noreferrer">Join the mailing list</a>
-      <button id="restart-btn" class="button-secondary" type="button">Start again</button>
+      <button id="restart-btn" class="button-secondary" type="button"><span class="button-icon" aria-hidden="true">&#x21bb;</span> Start again</button>
     </div>
   `;
 
   document.getElementById("restart-btn")?.addEventListener("click", () => {
-    appState.screen = "welcome";
-    appState.questionIndex = 0;
-    appState.answers = Array(QUESTIONS.length).fill(null);
+    resetQuiz("welcome");
     render();
   });
 }
