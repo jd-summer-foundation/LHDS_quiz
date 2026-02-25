@@ -24,7 +24,7 @@ const QUESTIONS = [
     options: [
       { label: "Yes - it's level entry (no step or lip).", points: 2 },
       { label: "There's a small lip, edge, or step-down.", points: 1 },
-      { label: "Climbing over a bath edge to shower creates a fall risk.", points: 0 },
+      { label: "It's a shower over a bath.", points: 0 },
     ],
     feedbackByPoints: {
       2: "Level entry for a shower is ideal to create a safe environment.",
