@@ -178,7 +178,7 @@ function renderQuestion() {
   quizCard.innerHTML = `
     <p class="progress">Question ${index + 1} of ${QUESTIONS.length}</p>
     <form id="question-form">
-      <fieldset>
+      <div class="question-layout">
         <div class="question-illustration-wrap">
           <img
             class="question-illustration"
@@ -187,9 +187,14 @@ function renderQuestion() {
             onerror="this.parentElement.hidden = true;"
           />
         </div>
-        <legend class="question-title">${escapeHtml(question.prompt)}</legend>
-        <div class="options">${optionsMarkup}</div>
-      </fieldset>
+        <div class="question-content">
+          <h2 id="${question.id}_title" class="question-title">${escapeHtml(question.prompt)}</h2>
+          <fieldset aria-labelledby="${question.id}_title">
+            <legend class="sr-only">Answer options</legend>
+            <div class="options">${optionsMarkup}</div>
+          </fieldset>
+        </div>
+      </div>
       <div class="button-row">
         ${
           index > 0
