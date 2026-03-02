@@ -1,4 +1,4 @@
-const SIGNUP_URL = "https://www.summerfoundation.org.au/what-we-do/building-better-homes/";
+const SIGNUP_URL = "https://www.summerfoundation.org.au/what-we-do/building-better-homes/#bbh-form";
 const LOGO_PATH = "/assets/summer-foundation-logo.svg";
 
 const QUESTIONS = [
@@ -86,6 +86,7 @@ const appState = {
   questionIndex: 0,
   answers: Array(QUESTIONS.length).fill(null),
 };
+const preloadedQuestionImages = new Set();
 
 const quizCard = document.getElementById("quiz-card");
 const mainContent = document.getElementById("main-content");
@@ -93,6 +94,20 @@ const logo = document.getElementById("brand-logo");
 
 if (logo) {
   logo.src = LOGO_PATH;
+}
+
+function preloadImage(path) {
+  if (preloadedQuestionImages.has(path)) return;
+  const image = new Image();
+  image.decoding = "async";
+  image.src = path;
+  preloadedQuestionImages.add(path);
+}
+
+function preloadQuestionIllustrations() {
+  for (let index = 0; index < QUESTIONS.length; index += 1) {
+    preloadImage(getQuestionImagePath(index));
+  }
 }
 
 function escapeHtml(text) {
@@ -184,6 +199,8 @@ function renderQuestion() {
             class="question-illustration"
             src="${getQuestionImagePath(index)}"
             alt="${escapeHtml(question.areaLabel)} illustration"
+            decoding="async"
+            fetchpriority="${index === 0 ? "high" : "auto"}"
             onerror="this.parentElement.hidden = true;"
           />
         </div>
@@ -314,6 +331,12 @@ function render() {
   }
 
   mainContent?.focus();
+}
+
+if (typeof window.requestIdleCallback === "function") {
+  window.requestIdleCallback(preloadQuestionIllustrations);
+} else {
+  window.setTimeout(preloadQuestionIllustrations, 0);
 }
 
 render();
