@@ -121,6 +121,10 @@ function resetQuiz(screen = "welcome") {
   appState.answers = Array(QUESTIONS.length).fill(null);
 }
 
+function getQuestionImagePath(questionIndex) {
+  return `./Question${questionIndex + 1}.png`;
+}
+
 function getStatusForPoints(points) {
   if (points === 2) {
     return { emoji: "🟢", label: "Strong", className: "score-green" };
@@ -174,10 +178,23 @@ function renderQuestion() {
   quizCard.innerHTML = `
     <p class="progress">Question ${index + 1} of ${QUESTIONS.length}</p>
     <form id="question-form">
-      <fieldset>
-        <legend class="question-title">${escapeHtml(question.prompt)}</legend>
-        <div class="options">${optionsMarkup}</div>
-      </fieldset>
+      <div class="question-layout">
+        <div class="question-illustration-wrap">
+          <img
+            class="question-illustration"
+            src="${getQuestionImagePath(index)}"
+            alt="${escapeHtml(question.areaLabel)} illustration"
+            onerror="this.parentElement.hidden = true;"
+          />
+        </div>
+        <div class="question-content">
+          <h2 id="${question.id}_title" class="question-title">${escapeHtml(question.prompt)}</h2>
+          <fieldset aria-labelledby="${question.id}_title">
+            <legend class="sr-only">Answer options</legend>
+            <div class="options">${optionsMarkup}</div>
+          </fieldset>
+        </div>
+      </div>
       <div class="button-row">
         ${
           index > 0
