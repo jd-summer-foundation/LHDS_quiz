@@ -291,7 +291,6 @@ function renderResults() {
     <h2 class="results-title">${escapeHtml(band.title)}</h2>
     <p class="score-line"><strong>Area-by-area results</strong></p>
     <ul class="area-results">${areaResultsMarkup}</ul>
-    <p class="score-line"><strong>Total score: ${score}/6</strong></p>
     <ul class="band-message">
       ${band.messages.map((message) => `<li>${escapeHtml(message)}</li>`).join("")}
     </ul>
@@ -305,7 +304,7 @@ function renderResults() {
 
     <aside class="info-note" aria-label="Victoria context note">
       <p class="small-note">In Victoria, new homes are now built to minimum accessibility standards. This quiz isn't a compliance check - it's just a quick way to think about what makes a home easier to live in over time.</p>
-      <p class="small-note">The Livable Housing Design Standard mainly applies to new homes, not retrofitting existing homes.</p>
+      <p class="small-note">The Livable Housing Design Standard applies to new homes, not retrofitting existing homes.</p>
     </aside>
 
     <h3>Want updates on Building Better Homes?</h3>
